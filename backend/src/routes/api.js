@@ -1,18 +1,14 @@
 import express from 'express';
 import { scrapeArticles } from '../controllers/scraperController.js';
 import Article from '../models/Article.js';
+import { getArticles , getArticleById } from './controllers/articleController.js';
 
 const router = express.Router();
 
 router.get('/scrape', scrapeArticles);
 
-router.get('/articles', async(req, res) => {
-    try {
-       const articles = await Article.findAll();
-       res.status(200).json(articles); 
-    } catch (error) {
-        res.status(500).json({error: error.message});
-    }
-});
+router.get('/articles', getArticles);
 
-export default router
+router.get('/articles/:id', getArticleById);
+
+export default router;
