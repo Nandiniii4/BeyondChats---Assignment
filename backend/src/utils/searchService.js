@@ -1,18 +1,18 @@
-import { getJson } from 'google-search-results-nodejs';
+import pkg from 'google-search-results-nodejs';
+const { GoogleSearch } = pkg;
 import 'dotenv/config';
 
 export const searchGoogle = async(query) => {
     return new Promise((resolve, reject) => {
         try {
-           const search = new getJson({
-            engine: "google",
-            q: query,
-            api_key: process.env.SERPAPI_KEY,
-            num: 5
-           });
+           const search = new GoogleSearch(process.env.SERPAPI_KEY);
 
-           search.json((data) => {
-            if(!data.organic_results){
+           search.json({
+                engine: "google",
+                q: query,
+                num: 5
+            }, (data) => {
+                    if(!data.organic_results){
                 console.log("No organic results found!");
                 resolve([]);
             }
