@@ -24,7 +24,8 @@ This project is an assignment to demonstrate backend development, web scraping, 
 * **Database:** MySQL
 * **AI Engine:** Google Gemini API (`gemini-flash-latest`)
 * **Search Engine:** SerpApi (Google Search Results)
-* **Scraping:** * *Phase 1:* Cheerio & Axios
+* **Scraping:** 
+    * *Phase 1:* Cheerio & Axios
     * *Phase 2:* JSDOM & Mozilla Readability (for external blogs)
 
 ## Architecture
