@@ -18,7 +18,18 @@ export const searchGoogle = async(query) => {
             }
             
             const articles = data.organic_results
-                .filter(result => result.link && !result.link.includes('youtube.com') && !result.link.endsWith('.pdf'))
+                .filter(result => {
+                    const link = result.link || '';
+                    return link &&
+                        !link.includes('youtube.com') &&
+                        !link.includes('amazon') &&
+                        !link.includes('ebay') &&
+                        !link.includes('pinterest') && 
+                        !link.includes('instagram') &&
+                        !link.includes('facebook') &&
+                        !link.includes('beyondchats.com') && 
+                        !link.endsWith('.pdf');
+                })
                 .slice(0,2)
                 .map(result => ({
                     title: result.title,
