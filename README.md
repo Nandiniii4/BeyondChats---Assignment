@@ -3,8 +3,8 @@
 A full-stack application that scrapes articles from the BeyondChats blog, stores them in a database, and uses AI to rewrite them for a modern audience.
 
 ### Live Demo
-* **Frontend UI:** [[PASTE_YOUR_VERCEL_LINK_HERE](https://beyond-chats-assignment-eight-smoky.vercel.app/)]
-* **Backend API:** [[PASTE_YOUR_RENDER_LINK_HERE](https://beyondchats-assignment-backend-z5vt.onrender.com)]
+* **Frontend UI:** [(https://beyond-chats-assignment-eight-smoky.vercel.app/)]
+* **Backend API:** [(https://beyondchats-assignment-backend-z5vt.onrender.com)]
 
 ## Overview
 This project is an assignment to demonstrate backend development, web scraping, and AI integration skills.
