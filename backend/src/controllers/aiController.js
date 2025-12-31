@@ -21,7 +21,7 @@ export const rewriteArticle = async(req, res) => {
             return res.status(200).json({ 
                 message: "Article fetched from cache (no API call needed)", 
                 original: article.content, 
-                rewritten: article.updated_content,
+                updated: article.updated_content,
                 references: [] 
             });
         }
