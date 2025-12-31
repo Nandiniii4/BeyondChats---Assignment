@@ -22,7 +22,7 @@ export const getArticles = async () => {
 
 export const getArticleById = async (id) => {
     try {
-        const response = await api.get(`/articles/:${id}`);
+        const response = await api.get(`/articles/${id}`);
         return response.data;
     } catch (error) {
         console.error(`Error fetching article with id: ${id}`, error);

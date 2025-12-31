@@ -20,8 +20,8 @@ export const rewriteArticle = async(req, res) => {
             console.log(`Article ${id} already updated. Returning updated version.`);
             return res.status(200).json({ 
                 message: "Article fetched from cache (no API call needed)", 
-                original: article.content, 
-                updated: article.updated_content,
+                original_content: article.content, 
+                updated_content: article.updated_content,
                 references: [] 
             });
         }
@@ -36,31 +36,50 @@ export const rewriteArticle = async(req, res) => {
         let validReferences = [];
 
         for(const result of searchResults){
-            const scrapedData = await scrapeURL(result.link);
+            try {
+                if(validReferences.length >= 3){
+                    break;
+                }
+                const scrapedData = await scrapeURL(result.link);
 
-            if(scrapedData){
-                validReferences.push({title: scrapedData.title, url: result.link});
+                if(scrapedData && scrapedData.content){
+                    validReferences.push({title: scrapedData.title, url: result.link});
+                    referenceContent += `\n\n--- REFERENCE ARTICLE: ${scrapedData.title} ---\n${scrapedData.content.substring(0, 1500)}`;
+                }
+
+            } catch (error) {
+                console.warn(`Skipping reference URL ${result.link}: ${error.message}`);
             }
+        }
+
+        let instructions = "";
+        if (referenceContent.trim()) {
+            instructions = `
+            2. Incorporate new facts or insights found in the Reference Articles provided above.
+            3. Merge the "Original Article" with the "Reference Articles" to create a comprehensive guide.
+            `;
+        } else {
+            instructions = `
+            2. Improve the clarity, flow, and tone of the original text.
+            3. Expand on the concepts using your own knowledge to make it more comprehensive.
+            `;
         }
 
         const prompt = `
             You are an expert tech editor. Your task is to rewrite the "Original Article" below.
-            To do this, analyze the "Reference Articles" provided. 
             
-            Goal: Update the Original Article to match the quality, depth, and formatting style of the Reference Articles.
-
             ORIGINAL ARTICLE:
             Title: ${article.title}
             Content: ${article.content}
 
+            ${referenceContent ? "REFERENCE MATERIALS (Use these to enhance the article):" : ""}
             ${referenceContent}
 
-            IINSTRUCTIONS:
-            1. Rewrite the original article completely to be engaging and modern.
-            2. Incorporate new facts or insights found in the Reference Articles.
-            3. Use short paragraphs and clear headings.
-            4. **IMPORTANT:** Do NOT include a "References" section. Do NOT list links. I will handle citations programmatically.
-            5. Output ONLY the final rewritten article text (Markdown format).
+            INSTRUCTIONS:
+            1. Rewrite the article completely to be engaging, modern, and professional (Markdown format).
+            ${instructions}
+            4. Use clear headings (##), lists, and short paragraphs.
+            5. **IMPORTANT:** Output ONLY the article content. Do NOT output a "References" section at the end.
         `;
 
         const result = await model.generateContent(prompt);
@@ -80,8 +99,8 @@ export const rewriteArticle = async(req, res) => {
 
         res.status(200).json({
             message: "Article updated successfully",
-            original: article.content,
-            updated: updatedText,
+            original_content: article.content,
+            updated_content: updatedText,
             references: validReferences
         });
 
